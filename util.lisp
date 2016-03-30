@@ -9,3 +9,14 @@
 	(if (equal (subseq header 0 4) "POST")
 	    (parse-post-header header stream)
 	    (parse-get-header header stream)))))
+
+(defun read-utf-8-string (stream &optional (end 0))
+  (let ((byte -1)
+	(buffer (make-array 1 :fill-pointer 0 :adjustable t)))
+    (handler-case 
+	(loop do
+	     (setq byte (read-byte stream))
+	     (if (/= byte end) (vector-push-extend byte buffer))
+	   while (/= byte end))
+      (end-of-file ()))
+    (trivial-utf-8:utf-8-bytes-to-string buffer)))
