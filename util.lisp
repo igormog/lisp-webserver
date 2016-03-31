@@ -20,3 +20,11 @@
 	   while (/= byte end))
       (end-of-file ()))
     (trivial-utf-8:utf-8-bytes-to-string buffer)))
+
+(defun response-write (text stream)
+  (trivial-utf-8:write-utf-8-bytes text stream))
+
+(defun parse-get-header (header stream)
+  (cons "GET" 
+	(cons (parse-path (subseq header (position #\/ header) (position #\Space header :from-end t)))
+	      (parse-headers stream))))
