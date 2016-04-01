@@ -28,3 +28,12 @@
   (cons "GET" 
 	(cons (parse-path (subseq header (position #\/ header) (position #\Space header :from-end t)))
 	      (parse-headers stream))))
+
+(defun parse-headers (stream)
+  (let ((headers nil)
+	(header nil))
+    (loop do
+	 (setq header (read-utf-8-string stream 10))
+	 (if (> (length header) 2) (setq headers (cons (parse-header header) headers)))
+	 while (> (length header) 2))
+    (reverse headers)))
