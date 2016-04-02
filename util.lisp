@@ -37,3 +37,7 @@
 	 (if (> (length header) 2) (setq headers (cons (parse-header header) headers)))
 	 while (> (length header) 2))
     (reverse headers)))
+
+(defun parse-header (header)
+  (let ((pos (position #\: header)))
+    (if pos (cons (string-downcase (subseq header 0 pos)) (string-trim (concatenate 'string (string #\Space) (string #\Return)) (subseq header (1+ pos)))))))
