@@ -41,3 +41,7 @@
 (defun parse-header (header)
   (let ((pos (position #\: header)))
     (if pos (cons (string-downcase (subseq header 0 pos)) (string-trim (concatenate 'string (string #\Space) (string #\Return)) (subseq header (1+ pos)))))))
+
+
+(defun parse-post-header (header stream)
+  (cons "POST" nil))
