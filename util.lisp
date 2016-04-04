@@ -45,3 +45,24 @@
 
 (defun parse-post-header (header stream)
   (cons "POST" nil))
+
+(defun file-response (filename type request stream)
+  (handler-case
+      (with-open-file (in (merge-pathnames (merge-pathnames filename "web/") myweb.config:*base-directory*) :element-type '(unsigned-byte 8))
+	(if (equal (get-header "if-modified-since" request) (format-timestring nil (universal-to-timestamp (file-write-date in)) :format +asctime-format+))
+	    (http-response "304 Not Modified" nil stream)
+	(progn 
+	  (http-response "200 OK" 
+			 (cons
+			  (cons "Last-Modified" (format-timestring nil (universal-to-timestamp (file-write-date in)) :format +asctime-format+))
+			  (cons (cons "Content-Type" type) nil))
+			 stream)
+	  (let ((buf (make-array 4096 :element-type (stream-element-type in))))
+	    (loop for pos = (read-sequence buf in)
+	       while (plusp pos)
+	       do (write-sequence buf stream :end pos)))	 
+	)))
+    (file-error () 
+      (http-404-not-found "404 File Not Found" stream)
+      )))
+
