@@ -66,3 +66,28 @@
       (http-404-not-found "404 File Not Found" stream)
       )))
 
+(defun html-template (filename type params request stream)
+  (handler-case
+      (with-open-file (in (merge-pathnames (merge-pathnames filename "web/") myweb.config:*base-directory*) :element-type '(unsigned-byte 8))
+	(loop for line = (read-utf-8-string in 10)
+	   while (and line (> (length line) 0))  
+	   do (progn
+		(mapcar (lambda (i)
+			  (let* ((key (concatenate 'string "${" (car i) "}")))
+			    (loop for pos = (search key line)
+				 while pos
+			       do 
+				 (setq line 
+				       (concatenate 'string 
+						    (subseq line 0 pos) (cdr i) 
+						    (subseq line (+ pos (length key)))))
+				 )
+			  )) params)
+		(response-write line stream)
+		(response-write (string #\Return) stream))
+	   )
+	)
+    (file-error () 
+      (http-404-not-found "404 File Not Found" stream)
+      )))
+
