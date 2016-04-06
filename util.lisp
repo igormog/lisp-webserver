@@ -91,3 +91,9 @@
       (http-404-not-found "404 File Not Found" stream)
       )))
 
+(defun http-response (code headers stream)
+  (response-write (concatenate 'string "HTTP/1.1 " code *new-line*)  stream)
+  (mapcar (lambda (header)
+	    (response-write 
+	     (concatenate 'string (car header) ": " (cdr header) *new-line*) stream)) headers)
+  (response-write *new-line* stream))
