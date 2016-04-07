@@ -97,3 +97,7 @@
 	    (response-write 
 	     (concatenate 'string (car header) ": " (cdr header) *new-line*) stream)) headers)
   (response-write *new-line* stream))
+
+(defun http-404-not-found (message stream)
+  (http-response "404 Not Found" nil stream)
+  (response-write message stream))	 
