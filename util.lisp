@@ -101,3 +101,8 @@
 (defun http-404-not-found (message stream)
   (http-response "404 Not Found" nil stream)
   (response-write message stream))	 
+
+(defun parse-path (path)
+  (if (position #\? path)
+      (cons (subseq path 0 (position #\? path)) (parse-params (subseq path (1+ (position #\? path)))))
+      (cons path nil)))
