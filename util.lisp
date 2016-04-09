@@ -13,7 +13,7 @@
 (defun read-utf-8-string (stream &optional (end 0))
   (let ((byte -1)
 	(buffer (make-array 1 :fill-pointer 0 :adjustable t)))
-    (handler-case 
+    (handler-case
 	(loop do
 	     (setq byte (read-byte stream))
 	     (if (/= byte end) (vector-push-extend byte buffer))
@@ -51,7 +51,7 @@
       (with-open-file (in (merge-pathnames (merge-pathnames filename "web/") myweb.config:*base-directory*) :element-type '(unsigned-byte 8))
 	(if (equal (get-header "if-modified-since" request) (format-timestring nil (universal-to-timestamp (file-write-date in)) :format +asctime-format+))
 	    (http-response "304 Not Modified" nil stream)
-	(progn 
+	(progn
 	  (http-response "200 OK" 
 			 (cons
 			  (cons "Last-Modified" (format-timestring nil (universal-to-timestamp (file-write-date in)) :format +asctime-format+))
@@ -60,7 +60,7 @@
 	  (let ((buf (make-array 4096 :element-type (stream-element-type in))))
 	    (loop for pos = (read-sequence buf in)
 	       while (plusp pos)
-	       do (write-sequence buf stream :end pos)))	 
+	       do (write-sequence buf stream :end pos)))
 	)))
     (file-error () 
       (http-404-not-found "404 File Not Found" stream)
@@ -76,10 +76,10 @@
 			  (let* ((key (concatenate 'string "${" (car i) "}")))
 			    (loop for pos = (search key line)
 				 while pos
-			       do 
-				 (setq line 
-				       (concatenate 'string 
-						    (subseq line 0 pos) (cdr i) 
+			       do
+				 (setq line
+				       (concatenate 'string
+						    (subseq line 0 pos) (cdr i)
 						    (subseq line (+ pos (length key)))))
 				 )
 			  )) params)
@@ -87,22 +87,28 @@
 		(response-write (string #\Return) stream))
 	   )
 	)
-    (file-error () 
+    (file-error ()
       (http-404-not-found "404 File Not Found" stream)
       )))
 
 (defun http-response (code headers stream)
   (response-write (concatenate 'string "HTTP/1.1 " code *new-line*)  stream)
   (mapcar (lambda (header)
-	    (response-write 
+	    (response-write
 	     (concatenate 'string (car header) ": " (cdr header) *new-line*) stream)) headers)
   (response-write *new-line* stream))
 
 (defun http-404-not-found (message stream)
   (http-response "404 Not Found" nil stream)
-  (response-write message stream))	 
+  (response-write message stream))
 
 (defun parse-path (path)
   (if (position #\? path)
       (cons (subseq path 0 (position #\? path)) (parse-params (subseq path (1+ (position #\? path)))))
       (cons path nil)))
+
+(defun http-char (c1 c2 &optional (default #\Space))
+  (let ((code (parse-integer (coerce (list c1 c2) 'string) :radix 16 :junk-allowed t)))
+    (if code
+	(code-char code)
+	default)))
