@@ -112,3 +112,13 @@
     (if code
 	(code-char code)
 	default)))
+
+(defun decode-param (s)
+  (labels ((f (1st)
+	     (when 1st
+	       (case (car 1st)
+		 (#\% (cons (http-char (cadr 1st) (caddr 1st))
+			    (f (cdddr 1st))))
+		 (#\+ (cons #\Space (f (cdr 1st))))
+		 (otherwise (cons (car 1st) (f (cdr 1st))))))))
+    (coerce (f (coerce s 'list)) 'string)))
