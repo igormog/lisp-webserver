@@ -122,3 +122,8 @@
 		 (#\+ (cons #\Space (f (cdr 1st))))
 		 (otherwise (cons (car 1st) (f (cdr 1st))))))))
     (coerce (f (coerce s 'list)) 'string)))
+
+(defun decode-kv (s)
+  (let ((p1 (position #\= s)))
+    (if p1 (cons (decode-param (subseq s 0 p1)) (decode-param (subseq s (1+ p1))))
+	     (cons (decode-param s) nil))))
