@@ -132,3 +132,7 @@
   (let ((p1 (position #\& s)))
     (if p1 (cons (decode-kv (subseq s 0 p1)) (parse-params (subseq s (1+ p1))))
 	(list (decode-kv s)))))
+
+(defun parse-params (s)
+  (let ((params (decode-params s)))
+    (remove-duplicates params :test (lambda (x1 x2) (equal (car x1) (car x2))) :from-end nil)))
