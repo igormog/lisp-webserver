@@ -136,3 +136,6 @@
 (defun parse-params (s)
   (let ((params (decode-params s)))
     (remove-duplicates params :test (lambda (x1 x2) (equal (car x1) (car x2))) :from-end nil)))
+
+(defun get-param (name request)
+  (cdr (assoc name (cdadr request) :test #'equal)))
