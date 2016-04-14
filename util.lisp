@@ -139,3 +139,6 @@
 
 (defun get-param (name request)
   (cdr (assoc name (cdadr request) :test #'equal)))
+
+(defun get-header (name request)
+  (cdr (assoc (string-downcase name) (cddr request) :test #'equal)))
