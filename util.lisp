@@ -142,3 +142,9 @@
 
 (defun get-header (name request)
   (cdr (assoc (string-downcase name) (cddr request) :test #'equal)))
+
+(defvar *log-queue-lock* (bt:make-lock))
+(defvar *log-queue-cond* (bt:make-condition-variable))
+(defvar *log-queue-cond-lock* (bt:make-lock))
+(defvar *log-queue* nil)
+(defvar *log-queue-time* (get-universal-time))
