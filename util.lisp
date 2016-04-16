@@ -148,3 +148,14 @@
 (defvar *log-queue-cond-lock* (bt:make-lock))
 (defvar *log-queue* nil)
 (defvar *log-queue-time* (get-universal-time))
+
+(defun log-worker ()
+  (bt:with-lock-held (*log-queue-lock*)
+    (progn 
+      (mapcar (lambda (i) (if (cdr i) (cl-log:log-message (car i) (cdr i)))) (reverse *log-queue*))
+      (setq *log-queue* nil)
+      ))
+  (bt:with-lock-held (*log-queue-cond-lock*)
+    (bt:condition-wait *log-queue-cond* *log-queue-cond-lock*)
+    )
+  (log-worker))
