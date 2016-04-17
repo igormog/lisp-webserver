@@ -159,3 +159,5 @@
     (bt:condition-wait *log-queue-cond* *log-queue-cond-lock*)
     )
   (log-worker))
+
+(bt:make-thread #'log-worker :name "log-worker")
