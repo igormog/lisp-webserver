@@ -161,3 +161,11 @@
   (log-worker))
 
 (bt:make-thread #'log-worker :name "log-worker")
+
+(defun log-info (message)
+  (bt:with-lock-held (*log-queue-lock*)
+    (progn 
+      (push (cons :info message) *log-queue*)
+      (if (> (- (get-universal-time) *log-queue-time*) 0)
+	  (bt:condition-notify *log-queue-cond*))
+      )))
