@@ -177,3 +177,11 @@
       (if (> (- (get-universal-time) *log-queue-time*) 0)
 	  (bt:condition-notify *log-queue-cond*))
       )))
+
+(defun log-error (message)
+  (bt:with-lock-held (*log-queue-lock*)
+    (progn 
+      (push (cons :error message) *log-queue*)
+      (if (> (- (get-universal-time) *log-queue-time*) 0)
+	  (bt:condition-notify *log-queue-cond*))
+      )))
