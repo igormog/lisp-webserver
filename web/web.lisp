@@ -105,3 +105,10 @@
     (with-lock-held (*request-mutex*)
       (setq *request-threads* (remove request-id *request-threads* :key 'car)))
     ))
+
+(defun list-workers ()
+  (with-lock-held (*worker-mutex*)
+    (setq *workers*
+	  (remove-if (lambda (w) (not (thread-alive-p w))) *workers*))
+    (setq *worker-num* (length *workers*))
+	*workers*))
