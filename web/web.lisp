@@ -112,3 +112,9 @@
 	  (remove-if (lambda (w) (not (thread-alive-p w))) *workers*))
     (setq *worker-num* (length *workers*))
 	*workers*))
+
+(defun list-requests ()
+  (with-lock-held (*request-mutex*)
+    (setq *request-threads*
+  	(remove-if (lambda (r) (not (thread-alive-p (cdr r)))) *request-threads*))
+	*request-threads*))
