@@ -118,3 +118,9 @@
     (setq *request-threads*
   	(remove-if (lambda (r) (not (thread-alive-p (cdr r)))) *request-threads*))
 	*request-threads*))
+
+(defun stop-http ()
+  (if *listen-socket*
+      (progn (stop-thread)
+	(socket-close *listen-socket*)
+	
