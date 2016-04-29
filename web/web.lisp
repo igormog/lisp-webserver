@@ -124,3 +124,4 @@
       (progn (stop-thread)
 	(socket-close *listen-socket*)
 	     (setq *listen-socket* nil)
+	     (setq *request-queue* nil)
