@@ -123,4 +123,4 @@
   (if *listen-socket*
       (progn (stop-thread)
 	(socket-close *listen-socket*)
-	
+	     (setq *listen-socket* nil)
