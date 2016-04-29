@@ -125,3 +125,4 @@
 	(socket-close *listen-socket*)
 	     (setq *listen-socket* nil)
 	     (setq *request-queue* nil)
+	     (setq *worker-num* 0)
