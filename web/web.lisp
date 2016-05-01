@@ -127,3 +127,4 @@
 	     (setq *request-queue* nil)
 	     (setq *worker-num* 0)
 	     (setq *workers* nil)
+	     (mapcar (lambda (i) (destroy-thread (cdr i))) *idle-workers*)
