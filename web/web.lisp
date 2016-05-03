@@ -129,3 +129,4 @@
 	     (setq *workers* nil)
 	     (mapcar (lambda (i) (destroy-thread (cdr i))) *idle-workers*)
 	     (setq *idle-workers-num* 0)
+	     (setq *idle-workers* nil)
