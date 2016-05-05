@@ -131,3 +131,4 @@
 	     (setq *idle-workers-num* 0)
 	     (setq *idle-workers* nil)
 	     (release-lock *worker-mutex*)
+	     (setq *request-threads* nil)
