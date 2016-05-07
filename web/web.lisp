@@ -133,3 +133,4 @@
 	     (release-lock *worker-mutex*)
 	     (setq *request-threads* nil)
 	     (release-lock *request-mutex*)
+	     (setq *request-mutex* (make-lock "request-mutex"))
