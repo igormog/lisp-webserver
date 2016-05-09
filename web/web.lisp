@@ -135,3 +135,7 @@
 	     (release-lock *request-mutex*)
 	     (setq *request-mutex* (make-lock "request-mutex"))
 	     (setq *worker-mutex* (make-lock "worker-mutex")))))
+
+(defun stop-thread ()
+  (if (and *listen-thread* (thread-alive-p *listen-thread*))
+      (destroy-thread *listen-thread*)))
